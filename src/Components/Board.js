@@ -2,8 +2,10 @@ import React, { useEffect, useReducer } from "react";
 import Square from "./Square";
 import History from "./History";
 import Controls from "./Controls";
+import WinnerModal from "./WinnerModal";
 import { saveToStorage, loadFromStorage } from "../Utils/storage";
 import { getQueryParams, setQueryParams } from "../Utils/queryParams";
+import { checkWinner, getMoveDetails } from "../Utils/GameLogic";
 
 const initialState = {
     board: Array(9).fill(null),
@@ -15,32 +17,39 @@ const initialState = {
 function reducer(state, action) {
     switch (action.type) {
         case "MOVE":
+            if (state.board[action.index] || checkWinner(state.board)) return state;
+
             const newBoard = [...state.board];
             newBoard[action.index] = state.isXNext ? "X" : "O";
-            const newHistory = [...state.history.slice(0, state.step), newBoard];
+
+            const moveDetail = getMoveDetails(action.index, state.isXNext ? "X" : "O");
+
             return {
+                ...state,
                 board: newBoard,
                 isXNext: !state.isXNext,
-                history: newHistory,
-                step: newHistory.length,
+                history: [...state.history.slice(0, state.step), { board: newBoard, ...moveDetail }],
+                step: state.step + 1,
             };
 
         case "UNDO":
             if (state.step === 0) return state;
+            const prevStep = state.step - 1;
             return {
                 ...state,
-                board: state.history[state.step - 1] || Array(9).fill(null),
-                isXNext: state.step % 2 === 0,
-                step: state.step - 1,
+                step: prevStep,
+                board: state.history[prevStep].board || Array(9).fill(null),
+                isXNext: state.history[prevStep].player !== "X",
             };
 
         case "REDO":
             if (state.step >= state.history.length) return state;
+            const nextStep = state.step + 1;
             return {
                 ...state,
-                board: state.history[state.step] || state.board,
-                isXNext: state.step % 2 === 0,
-                step: state.step + 1,
+                step: nextStep,
+                board: state.history[nextStep].board || state.board,
+                isXNext: state.history[nextStep].player !== "O",
             };
 
         case "RESET":
@@ -49,9 +58,9 @@ function reducer(state, action) {
         case "JUMP_TO":
             return {
                 ...state,
-                board: state.history[action.step] || Array(9).fill(null),
-                isXNext: action.step % 2 === 0,
                 step: action.step,
+                board: state.history[action.step].board || Array(9).fill(null),
+                isXNext: action.step % 2 === 0,
             };
 
         default:
@@ -60,18 +69,23 @@ function reducer(state, action) {
 }
 
 export default function Board() {
-    const [state, dispatch] = useReducer(reducer, initialState, (init) => {
-        const storedState = loadFromStorage();
-        return storedState || init;
-    });
+    const [state, dispatch] = useReducer(reducer, initialState, () => loadFromStorage() || initialState);
 
     useEffect(() => {
         saveToStorage(state);
         setQueryParams(state);
     }, [state]);
 
+    const winner = checkWinner(state.board);
+
     return (
         <div className="flex flex-col items-center p-4">
+            <h1 className="text-3xl font-bold text-gray-800">Tic-Tac-Toe</h1>
+            {winner ? (
+                <h2 className="text-xl font-semibold text-red-500">{winner === "Draw" ? "It's Draw!" : `Winner: ${winner}`}</h2>
+            ) : (
+                <h2 className="text-xl font-semibold text-blue-500 m-2">Turn: {state.isXNext ? "❌" : "⭕"}</h2>
+            )}
             <div className="grid grid-cols-3 gap-2 sm:gap-4 w-[90%] sm:w-[300px]">
                 {state.board.map((square, i) => (
                     <Square key={i} value={square} onClick={() => dispatch({ type: "MOVE", index: i })} />
@@ -79,6 +93,7 @@ export default function Board() {
             </div>
             <Controls dispatch={dispatch} />
             <History history={state.history} jumpTo={(step) => dispatch({ type: "JUMP_TO", step })} />
+            <WinnerModal winner={winner} onReset={() => dispatch({ type: "RESET" })} />
         </div>
     );
 }
