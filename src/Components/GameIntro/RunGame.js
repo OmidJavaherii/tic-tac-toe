@@ -18,7 +18,7 @@ const GameIntro = () => {
     return (
         <div className="container">
         <img className='h-32 mb-12' src="./Logo.png" alt="Logo" />
-            <button className="button" onClick={handleStart}>Rum Game</button>
+            <button className="button" onClick={handleStart}>Run Game</button>
         </div>
     );
 };

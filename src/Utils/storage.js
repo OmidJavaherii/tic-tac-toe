@@ -1,5 +1,3 @@
-import React from "react";
-
 export function saveToStorage(state) {
     localStorage.setItem("tic-tac-toe", JSON.stringify(state));
 }
