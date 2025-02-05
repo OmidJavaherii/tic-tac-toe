@@ -1,0 +1,24 @@
+/* GameIntro.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #282c34;
+  color: white;
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  background-color: #61dafb;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #21a1f1;
+}

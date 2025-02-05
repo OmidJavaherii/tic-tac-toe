@@ -1,10 +1,10 @@
 import React from 'react'
 import './styles.css'
-import Board from './Components/Board';
+import GameIntro from './Components/GameIntro/RunGame';
 
 function App() {
   return (
-    <Board />
+    <GameIntro/>
   );
 }
 

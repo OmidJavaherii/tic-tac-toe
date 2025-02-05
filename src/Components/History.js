@@ -8,7 +8,7 @@ export default function History({ history, jumpTo }) {
         {history.map((move , index) => (
           <li key={index}>
             <button className="btn w-full text-left" onClick={() => jumpTo(index)}>
-              {move.player} : Row {move.row + 1}، Column {move.col + 1}
+              Player {move.player} : Row {move.row + 1}، Column {move.col + 1}
             </button>
           </li>
         ))}

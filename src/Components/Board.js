@@ -12,6 +12,7 @@ const initialState = {
     isXNext: true,
     history: [],
     step: 0,
+    redoStack: [],
 };
 
 function reducer(state, action) {
@@ -24,44 +25,87 @@ function reducer(state, action) {
 
             const moveDetail = getMoveDetails(action.index, state.isXNext ? "X" : "O");
 
-            return {
+            const newHistory = [
+                ...state.history,
+                { board: [...newBoard], ...moveDetail },
+            ];
+
+            const newState = {
                 ...state,
-                board: newBoard,
+                board: [...newBoard],
                 isXNext: !state.isXNext,
-                history: [...state.history.slice(0, state.step), { board: newBoard, ...moveDetail }],
-                step: state.step + 1,
+                history: newHistory,
+                step: newHistory.length,
+                redoStack: [],
             };
+            saveToStorage(newState);
+            setQueryParams(newState);
+            return newState
 
         case "UNDO":
             if (state.step === 0) return state;
             const prevStep = state.step - 1;
-            return {
+            const newHistoryUndo = state.history.slice(0, prevStep);
+            const prevMove = newHistoryUndo[prevStep - 1] || {};
+
+            const newRedoStack = [state.history[state.step - 1], ...state.redoStack];
+
+            const undoState = {
                 ...state,
                 step: prevStep,
-                board: state.history[prevStep].board || Array(9).fill(null),
-                isXNext: state.history[prevStep].player !== "X",
+                board: [...(prevMove.board || Array(9).fill(null))],
+                isXNext: prevMove.player !== "X",
+                history: newHistoryUndo,
+                redoStack: newRedoStack,
             };
+
+            saveToStorage(undoState);
+            setQueryParams(undoState);
+            return undoState;
 
         case "REDO":
-            if (state.step >= state.history.length) return state;
-            const nextStep = state.step + 1;
-            return {
+            if (state.redoStack.length === 0) return state;
+            const restoredMove = state.redoStack[0];
+            const newRedoStackRedo = state.redoStack.slice(1);
+            const newHistoryRedo = [...state.history, restoredMove];
+
+            const redoState = {
                 ...state,
-                step: nextStep,
-                board: state.history[nextStep].board || state.board,
-                isXNext: state.history[nextStep].player !== "O",
+                step: state.step + 1,
+                board: [...(restoredMove.board || state.board)],
+                isXNext: restoredMove.player !== "X",
+                history: newHistoryRedo,
+                redoStack: newRedoStackRedo,
             };
+
+            saveToStorage(redoState);
+            setQueryParams(redoState);
+            return redoState;
 
         case "RESET":
-            return initialState;
+            const resetState = { ...initialState };
+            saveToStorage(resetState);
+            setQueryParams(resetState);
+            return resetState;
 
         case "JUMP_TO":
-            return {
+            if (action.step < 0 || action.step >= state.history.length) return state;
+
+            const trimmedHistory = state.history.slice(0, action.step + 1);
+            const lastMove = trimmedHistory[action.step] || {};
+            const isNextX = lastMove.player !== "X";
+
+            const jumpState = {
                 ...state,
                 step: action.step,
-                board: state.history[action.step].board || Array(9).fill(null),
-                isXNext: action.step % 2 === 0,
+                board: [...(lastMove.board || Array(9).fill(null))],
+                isXNext: isNextX,
+                history: trimmedHistory,
+                redoStack: []
             };
+            saveToStorage(jumpState);
+            setQueryParams(jumpState);
+            return jumpState;
 
         default:
             return state;
@@ -69,7 +113,10 @@ function reducer(state, action) {
 }
 
 export default function Board() {
-    const [state, dispatch] = useReducer(reducer, initialState, () => loadFromStorage() || initialState);
+    const initialData = getQueryParams();
+    const [state, dispatch] = useReducer(reducer, initialState, () => {
+        return initialData.board ? initialData : loadFromStorage() || initialState;
+    });
 
     useEffect(() => {
         saveToStorage(state);
