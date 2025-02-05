@@ -133,7 +133,7 @@ export default function Board() {
             ) : (
                 <h2 className="text-xl font-semibold text-blue-500 m-2">Turn: {state.isXNext ? "❌" : "⭕"}</h2>
             )}
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 w-[90%] sm:w-[300px]">
+            <div className="grid grid-cols-3 place-items-center gap-2 sm:gap-4 w-[50%] sm:w-[300px]">
                 {state.board.map((square, i) => (
                     <Square key={i} value={square} onClick={() => dispatch({ type: "MOVE", index: i })} />
                 ))}
