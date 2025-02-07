@@ -21,20 +21,23 @@ export default function App() {
       event.preventDefault();
       setDeferredPrompt(event);
       sessionStorage.setItem("pwaInstallPrompt", true);
+      setTimeout(() => window.dispatchEvent(new Event("deferredPromptReady")), 100)
     };
 
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    window.addEventListener("appinstalled", () => {
+    const handleAppInstalled = () => {
       console.log("PWA Has Installed");
       setIsInstalled(true);
       sessionStorage.removeItem("pwaInstallPrompt");
-    });
+      setTimeout(() => window.dispatchEvent(new Event("pwaInstalled")), 100);
+    };
 
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
     checkInstallation();
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-      window.removeEventListener("appinstalled", () => { });
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 

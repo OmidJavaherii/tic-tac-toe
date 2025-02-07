@@ -13,6 +13,16 @@ export default function Home({ setGameMode, deferredPrompt }) {
 
     useEffect(() => {
         window.history.replaceState(null, "", "/");
+        const handlePromptReady = () => setInstallable(true);
+        const handlePwaInstalled = () => setInstallable(false);
+
+        window.addEventListener("deferredPromptReady", handlePromptReady);
+        window.addEventListener("pwaInstalled", handlePwaInstalled);
+
+        return () => {
+            window.removeEventListener("deferredPromptReady", handlePromptReady);
+            window.removeEventListener("pwaInstalled", handlePwaInstalled);
+        };
     }, []);
 
     const installPWA = () => {
@@ -20,9 +30,7 @@ export default function Home({ setGameMode, deferredPrompt }) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choice) => {
                 if (choice.outcome === "accepted") {
-                    console.log("User accepted the PWA install");
-                } else {
-                    console.log("User dismissed the PWA install");
+                    setInstallable(false);
                 }
             });
         }
@@ -41,7 +49,7 @@ export default function Home({ setGameMode, deferredPrompt }) {
             <button onClick={toggleTheme} className="btn py-3 mb-4 rounded-lg transition duration-300">
                 {theme === "dark" ? "☀️" : "🌙"}
             </button>
-            {!isInstalled && deferredPrompt && !isIOS && (
+            {!isInstalled && installable && !isIOS && (
                 <button onClick={installPWA} className="btn py-3 mb-4 bg-green-500 hover:bg-green-700">
                     📲 Install PWA
                 </button>
