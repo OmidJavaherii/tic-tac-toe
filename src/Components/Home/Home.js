@@ -5,6 +5,10 @@ import { ThemeContext } from "../Theme/ThemeProvider";
 export default function Home({ setGameMode, deferredPrompt }) {
     const navigate = useNavigate();
     const { theme, toggleTheme } = useContext(ThemeContext);
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isInStandaloneMode = window.matchMedia("(display-mode: standalone)").matches;
+
     const [installable, setInstallable] = useState(!!deferredPrompt);
 
     useEffect(() => {
@@ -37,10 +41,15 @@ export default function Home({ setGameMode, deferredPrompt }) {
             <button onClick={toggleTheme} className="btn py-3 mb-4 rounded-lg transition duration-300">
                 {theme === "dark" ? "☀️" : "🌙"}
             </button>
-            {installable && (
+            {!isInstalled && deferredPrompt && !isIOS && (
                 <button onClick={installPWA} className="btn py-3 mb-4 bg-green-500 hover:bg-green-700">
                     📲 Install PWA
                 </button>
+            )}
+            {isIOS && !isInStandaloneMode && (
+                <p className="text-gray-700 text-sm text-center mt-4">
+                    برای نصب PWA ّFor iPhone ،click on <strong>Share</strong> and select <strong>Add to Home Screen</strong>to install... 📲
+                </p>
             )}
         </div>
     );
