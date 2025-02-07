@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 import Square from "./Square";
 import History from "./History";
 import Controls from "./Controls";
@@ -113,6 +114,7 @@ function reducer(state, action) {
 }
 
 export default function Board() {
+    const navigate = useNavigate();
     const initialData = getQueryParams();
     const [state, dispatch] = useReducer(reducer, initialState, () => {
         return initialData.board ? initialData : loadFromStorage() || initialState;
@@ -129,9 +131,9 @@ export default function Board() {
         <div className="flex flex-col items-center p-4">
             <h1 className="text-3xl font-bold text-gray-800">Tic-Tac-Toe</h1>
             {winner ? (
-                <h2 className="text-xl font-semibold text-red-500">{winner === "Draw" ? "It's Draw!" : `Winner: ${winner}`}</h2>
+                <h2 className="text-xl font-semibold text-red-500 mb-3">{winner === "Draw" ? "It's Draw!" : `Winner: ${winner}`}</h2>
             ) : (
-                <h2 className="text-xl font-semibold text-blue-500 m-2">Turn: {state.isXNext ? "❌" : "⭕"}</h2>
+                <h2 className="text-xl font-semibold text-blue-500 mb-3">Turn: {state.isXNext ? "❌" : "⭕"}</h2>
             )}
             <div className="grid grid-cols-3 place-items-center gap-2 sm:gap-4 w-[50%] sm:w-[300px]">
                 {state.board.map((square, i) => (
@@ -139,6 +141,7 @@ export default function Board() {
                 ))}
             </div>
             <Controls dispatch={dispatch} />
+            <button className="btn mt-4 bg-blue-500 hover:bg-blue-900" onClick={() => navigate("/")}>Return to Main Page</button>
             <History history={state.history} jumpTo={(step) => dispatch({ type: "JUMP_TO", step })} />
             <WinnerModal winner={winner} onReset={() => dispatch({ type: "RESET" })} />
         </div>

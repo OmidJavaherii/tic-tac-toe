@@ -4,7 +4,7 @@ export default function WinnerModal({ winner, onReset }) {
   if (!winner) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 mt-0">
       <div className="bg-white p-6 rounded-lg shadow-lg text-center w-80">
         <h2 className="text-2xl font-bold text-gray-800">
           {winner === "Draw" ? "It's Draw!" : `Winner: ${winner} 🎉`}
