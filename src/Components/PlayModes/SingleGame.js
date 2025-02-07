@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import Square from "./Square";
-import History from "./History";
-import WinnerModal from "./WinnerModal";
-import { saveToStorage, loadFromStorage } from "../Utils/storage";
-import { getQueryParams, setQueryParams } from "../Utils/queryParams";
-import { getMoveDetails, checkWinner, getBestMove } from "../Utils/GameLogic";
+import Square from "../Square";
+import History from "../History";
+import WinnerModal from "../WinnerModal";
+import { saveToStorage, loadFromStorage } from "../../Utils/storage";
+import { getQueryParams, setQueryParams } from "../../Utils/queryParams";
+import { getMoveDetails, checkWinner, getBestMove } from "../../Utils/GameLogic";
 
 const initialState = {
     board: Array(9).fill(null),
@@ -50,7 +50,7 @@ function reducer(state, action) {
     }
 }
 
-export default function Game() {
+export default function SingleGame() {
     const navigate = useNavigate();
     const initialData = getQueryParams();
     const [isBotMoving, setIsBotMoving] = useState(false);
@@ -75,8 +75,8 @@ export default function Game() {
     }, [state, winner]);
 
     return (
-        <div className="flex flex-col items-center p-4">
-            <h1 className="text-3xl font-bold text-gray-800">Tic-Tac-Toe</h1>
+        <div className="flex flex-col items-center min-h-screen p-4">
+            <h1 className="text-3xl font-bold ">Tic-Tac-Toe</h1>
             {winner ? (
                 <h2 className="text-xl font-semibold text-red-500 mb-3">{winner === "Draw" ? "It's Draw!" : `Winner: ${winner}`}</h2>
             ) : (
@@ -88,7 +88,7 @@ export default function Game() {
                 ))}
             </div>
             <button className="btn mt-4 bg-red-500 hover:bg-red-600" onClick={() => dispatch({ type: "RESET" })}>Reset</button>
-            <button className="btn mt-4 bg-blue-500 hover:bg-blue-900" onClick={() => {
+            <button className="btn mt-4" onClick={() => {
                 dispatch({ type: "RESET" });
                 navigate("/");
             }}>Return to Main Page</button>

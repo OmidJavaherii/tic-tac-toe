@@ -25,3 +25,51 @@ button {
   margin: 5px;
   padding: 10px;
 }
+
+/*  dark mode - light mode  */
+
+.light-mode {
+  background: rgb(101, 253, 255);
+  background: linear-gradient(
+    119deg,
+    rgba(101, 253, 255, 1) 0%,
+    rgba(150, 190, 116, 1) 64%,
+    rgba(215, 185, 119, 1) 100%
+  );
+  color: #333;
+}
+
+.dark-mode {
+  background: rgb(40, 60, 64);
+  background: linear-gradient(
+    126deg,
+    rgba(40, 60, 64, 1) 0%,
+    rgba(2, 0, 36, 1) 60%,
+    rgba(28, 28, 82, 1) 81%
+  );
+}
+.dark-mode h1 {
+  color: #fff;
+}
+.dark-mode .btn {
+  background-color: #3c3c51;
+  color: #fff;
+}
+.dark-mode .btn:hover {
+  background-color: #444;
+}
+.dark-mode .history {
+  color: #fff;
+}
+/* .dark-mode .btn-nav {
+  background-color: rgb(239 68 68);
+}
+.dark-mode .btn-nav:hover {
+  background-color: rgb(220 38 38);
+} */
+.dark-mode .btn-li-history {
+  background-color: rgb(50, 76, 117);
+}
+.dark-mode .btn-li-history:hover {
+  background-color: rgb(31, 52, 105);
+}

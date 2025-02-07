@@ -1,12 +1,12 @@
 import React, { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import Square from "./Square";
-import History from "./History";
-import Controls from "./Controls";
-import WinnerModal from "./WinnerModal";
-import { saveToStorage, loadFromStorage } from "../Utils/storage";
-import { getQueryParams, setQueryParams } from "../Utils/queryParams";
-import { checkWinner, getMoveDetails } from "../Utils/GameLogic";
+import Square from "../Square";
+import History from "../History";
+import Controls from "../Controls";
+import WinnerModal from "../WinnerModal";
+import { saveToStorage, loadFromStorage } from "../../Utils/storage";
+import { getQueryParams, setQueryParams } from "../../Utils/queryParams";
+import { checkWinner, getMoveDetails } from "../../Utils/GameLogic";
 
 const initialState = {
     board: Array(9).fill(null),
@@ -113,7 +113,7 @@ function reducer(state, action) {
     }
 }
 
-export default function Board() {
+export default function TwoPlayer() {
     const navigate = useNavigate();
     const initialData = getQueryParams();
     const [state, dispatch] = useReducer(reducer, initialState, () => {
@@ -128,8 +128,8 @@ export default function Board() {
     const winner = checkWinner(state.board);
 
     return (
-        <div className="flex flex-col items-center p-4">
-            <h1 className="text-3xl font-bold text-gray-800">Tic-Tac-Toe</h1>
+        <div className="flex flex-col justify-center items-center min-h-screen p-4 ">
+            <h1 className="text-3xl font-bold ">Tic-Tac-Toe</h1>
             {winner ? (
                 <h2 className="text-xl font-semibold text-red-500 mb-3">{winner === "Draw" ? "It's Draw!" : `Winner: ${winner}`}</h2>
             ) : (
@@ -141,7 +141,7 @@ export default function Board() {
                 ))}
             </div>
             <Controls dispatch={dispatch} />
-            <button className="btn mt-4 bg-blue-500 hover:bg-blue-900" onClick={() => {
+            <button className="btn mt-4" onClick={() => {
                 dispatch({ type: "RESET" });
                 navigate("/");
             }}>
