@@ -52,16 +52,18 @@ function reducer(state, action) {
 
 export default function Game() {
     const navigate = useNavigate();
-        const initialData = getQueryParams();
+    const initialData = getQueryParams();
     const [isBotMoving, setIsBotMoving] = useState(false);
 
     const [state, dispatch] = useReducer(reducer, initialState, () => {
-            return initialData.board ? initialData : loadFromStorage() || initialState;
-        });
+        return initialData.board ? initialData : loadFromStorage() || initialState;
+    });
 
     const winner = checkWinner(state.board);
 
     useEffect(() => {
+        saveToStorage(state);
+        setQueryParams(state);
         if (!state.isXNext && !winner) {
             setIsBotMoving(true);
             setTimeout(() => {
@@ -86,7 +88,10 @@ export default function Game() {
                 ))}
             </div>
             <button className="btn mt-4 bg-red-500 hover:bg-red-600" onClick={() => dispatch({ type: "RESET" })}>Reset</button>
-            <button className="btn mt-4 bg-blue-500 hover:bg-blue-900" onClick={() => navigate("/")}>Return to Main Page</button>
+            <button className="btn mt-4 bg-blue-500 hover:bg-blue-900" onClick={() => {
+                dispatch({ type: "RESET" });
+                navigate("/");
+            }}>Return to Main Page</button>
             <History history={state.history} jumpTo={(step) => dispatch({ type: "JUMP_TO", step })} />
             <WinnerModal winner={winner} onReset={() => dispatch({ type: "RESET" })} />
         </div>

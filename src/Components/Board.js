@@ -141,7 +141,11 @@ export default function Board() {
                 ))}
             </div>
             <Controls dispatch={dispatch} />
-            <button className="btn mt-4 bg-blue-500 hover:bg-blue-900" onClick={() => navigate("/")}>Return to Main Page</button>
+            <button className="btn mt-4 bg-blue-500 hover:bg-blue-900" onClick={() => {
+                dispatch({ type: "RESET" });
+                navigate("/");
+            }}>
+                Return to Main Page</button>
             <History history={state.history} jumpTo={(step) => dispatch({ type: "JUMP_TO", step })} />
             <WinnerModal winner={winner} onReset={() => dispatch({ type: "RESET" })} />
         </div>

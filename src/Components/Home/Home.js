@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Home({ setGameMode }) {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        window.history.replaceState(null, "", "/");
+    }, []);
 
     const startGame = (mode) => {
         setGameMode(mode);
