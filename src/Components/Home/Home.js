@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../Theme/ThemeProvider";
 
-export default function Home({ setGameMode, deferredPrompt }) {
+export default function Home({ setGameMode, deferredPrompt, isInstalled }) {
     const navigate = useNavigate();
     const { theme, toggleTheme } = useContext(ThemeContext);
 
