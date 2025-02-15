@@ -5,7 +5,7 @@ import History from "../History";
 import WinnerModal from "../WinnerModal";
 import { saveToStorage, loadFromStorage } from "../../Utils/storage";
 import { getQueryParams, setQueryParams } from "../../Utils/queryParams";
-import { getMoveDetails, checkWinner, getBestMove } from "../../Utils/GameLogic";
+import { getMoveDetails, checkWinner, getBestMove, getBestMoveHard } from "../../Utils/GameLogic";
 
 const initialState = {
     board: Array(9).fill(null),
@@ -50,7 +50,7 @@ function reducer(state, action) {
     }
 }
 
-export default function SingleGame() {
+export default function SingleGame({ difficulty }) {
     const navigate = useNavigate();
     const initialData = getQueryParams();
     const [isBotMoving, setIsBotMoving] = useState(false);
@@ -67,12 +67,17 @@ export default function SingleGame() {
         if (!state.isXNext && !winner) {
             setIsBotMoving(true);
             setTimeout(() => {
-                const bestMove = getBestMove(state.board);
+                let bestMove;
+                if (difficulty === "easy") {
+                    bestMove = getBestMove(state.board);
+                } else {
+                    bestMove = getBestMoveHard(state.board);
+                }
                 dispatch({ type: "MOVE", index: bestMove });
                 setIsBotMoving(false);
             }, 500);
         }
-    }, [state, winner]);
+    }, [state, winner, difficulty]);
 
     return (
         <div className="flex flex-col items-center min-h-screen p-4">

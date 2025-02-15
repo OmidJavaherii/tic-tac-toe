@@ -61,12 +61,6 @@ button {
 .dark-mode .history {
   color: #fff;
 }
-/* .dark-mode .btn-nav {
-  background-color: rgb(239 68 68);
-}
-.dark-mode .btn-nav:hover {
-  background-color: rgb(220 38 38);
-} */
 .dark-mode .btn-li-history {
   background-color: rgb(50, 76, 117);
 }

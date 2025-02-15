@@ -30,3 +30,53 @@ export function getBestMove(board) {
 
     return emptySquares[Math.floor(Math.random() * emptySquares.length)];
 }
+
+export function getBestMoveHard(board) {
+    const bestMove = minimax(board, "O").index;
+    return bestMove;
+}
+
+function minimax(board, player) {
+    const emptySquares = board.map((square, index) => (square === null ? index : null)).filter((index) => index !== null);
+
+    if (checkWinner(board) === "X") return { score: -10 };
+    if (checkWinner(board) === "O") return { score: 10 };
+    if (emptySquares.length === 0) return { score: 0 };
+
+    let moves = [];
+
+    for (let i of emptySquares) {
+        let move = {};
+        move.index = i;
+        board[i] = player;
+
+        if (player === "O") {
+            move.score = minimax(board, "X").score;
+        } else {
+            move.score = minimax(board, "O").score;
+        }
+
+        board[i] = null;
+        moves.push(move);
+    }
+
+    let bestMove;
+    if (player === "O") {
+        let maxScore = -Infinity;
+        for (let move of moves) {
+            if (move.score > maxScore) {
+                maxScore = move.score;
+                bestMove = move;
+            }
+        }
+    } else {
+        let minScore = Infinity;
+        for (let move of moves) {
+            if (move.score < minScore) {
+                minScore = move.score;
+                bestMove = move;
+            }
+        }
+    }
+    return bestMove;
+}

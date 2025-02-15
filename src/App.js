@@ -7,6 +7,7 @@ import './styles.css'
 
 export default function App() {
   const [gameMode, setGameMode] = useState("twoPlayer");
+  const [difficulty , setDifficulty] = useState("hard")
 
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -46,8 +47,8 @@ export default function App() {
     <ThemeProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Home setGameMode={setGameMode} deferredPrompt={deferredPrompt} isInstalled={isInstalled} />} />
-          <Route path="/game" element={<Game gameMode={gameMode} />} />
+          <Route path="/" element={<Home setGameMode={setGameMode} setDifficulty={setDifficulty} deferredPrompt={deferredPrompt} isInstalled={isInstalled} />} />
+          <Route path="/game" element={<Game gameMode={gameMode} difficulty={difficulty} />} />
         </Routes>
       </Router>
     </ThemeProvider>
