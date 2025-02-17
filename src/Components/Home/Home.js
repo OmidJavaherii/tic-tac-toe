@@ -74,7 +74,7 @@ export default function Home({ setGameMode, setDifficulty, deferredPrompt, isIns
             )}
             {isIOS && !isInStandaloneMode && (
                 <p className="text-gray-700 text-sm text-center mt-4">
-                    Install PWA ّFor iPhone please click on <strong>Share</strong> and select <strong>Add to Home Screen</strong> to install... 📲
+                    Install PWA For iPhone please click on <strong>Share</strong> and select <strong>Add to Home Screen</strong> to install... 📲
                 </p>
             )}
         </div>
