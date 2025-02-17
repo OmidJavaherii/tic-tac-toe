@@ -1,3 +1,17 @@
+:root {
+  --status-bar-color: rgb(101, 253, 255);
+}
+.dark {
+  --status-bar-color: rgb(40, 60, 64);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --status-bar-color: rgb(40, 60, 64);
+  }
+}
+
+
 .game {
   display: flex;
   flex-direction: column;
