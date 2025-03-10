@@ -52,8 +52,8 @@ function minimax(board: (string | null)[], player: string): Move {
 
     for (let i of emptySquares) {
         let move: Move = {};
-        move.index = i;
-        board[i] = player;
+        move.index = i as number;
+        board[i as number] = player;
         if (player === "O") {
             const result = minimax(board, "X");
             move.score = result?.score ?? 0;
@@ -61,11 +61,11 @@ function minimax(board: (string | null)[], player: string): Move {
             const result = minimax(board, "O");
             move.score = result?.score ?? 0;
         }
-        board[i] = null;
+        board[i as number] = null;
         moves.push(move);
     }
 
-    let bestMove;
+    let bestMove: Move | undefined;
     if (player === "O") {
         let maxScore = -Infinity;
         for (let move of moves) {
