@@ -2,7 +2,12 @@ import React from "react";
 import TwoPlayer from "./TwoPlayer";
 import SingleGame from "./SingleGame";
 
-export default function Game({ gameMode, difficulty }) {
+interface GameProps {
+    gameMode: "twoPlayer" | "singlePlayer";
+    difficulty: "easy" | "hard";  // Removed "medium" since SingleGame only accepts easy/hard
+}
+
+const Game: React.FC<GameProps> = ({ gameMode, difficulty }) => {
     //   const [difficulty , setDifficulty] = useState("")
     
     return (
@@ -11,3 +16,5 @@ export default function Game({ gameMode, difficulty }) {
         </>
     );
 }
+
+export default Game;

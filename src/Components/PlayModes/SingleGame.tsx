@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import Square from "../Square";
 import History from "../History";
@@ -7,14 +7,27 @@ import { saveToStorage, loadFromStorage } from "../../Utils/storage";
 import { getQueryParams, setQueryParams } from "../../Utils/queryParams";
 import { getMoveDetails, checkWinner, getBestMove, getBestMoveHard } from "../../Utils/GameLogic";
 
-const initialState = {
+interface GameState {
+    board: (string | null)[];
+    isXNext: boolean;
+    history: { board: (string | null)[], position?: string }[];
+    step: number;
+    redoStack: { board: (string | null)[], position?: string }[];
+}
+
+type GameAction = 
+    | { type: "MOVE"; index: number }
+    | { type: "RESET" }
+    | { type: "JUMP_TO"; step: number };
+const initialState: GameState = {
     board: Array(9).fill(null),
     isXNext: true,
     history: [],
     step: 0,
+    redoStack: []
 };
 
-function reducer(state, action) {
+function reducer(state: GameState, action: GameAction) {
     switch (action.type) {
         case "MOVE":
             if (state.board[action.index] || checkWinner(state.board)) return state;
@@ -50,7 +63,11 @@ function reducer(state, action) {
     }
 }
 
-export default function SingleGame({ difficulty }) {
+interface SingleGameProps {
+  difficulty: "easy" | "hard";
+}
+
+export default function SingleGame({ difficulty }: SingleGameProps) {
     const navigate = useNavigate();
     const initialData = getQueryParams();
     const [isBotMoving, setIsBotMoving] = useState(false);
@@ -73,7 +90,9 @@ export default function SingleGame({ difficulty }) {
                 } else {
                     bestMove = getBestMoveHard(state.board);
                 }
-                dispatch({ type: "MOVE", index: bestMove });
+                if (bestMove !== null) {
+                    dispatch({ type: "MOVE", index: bestMove });
+                }
                 setIsBotMoving(false);
             }, 500);
         }
@@ -88,7 +107,7 @@ export default function SingleGame({ difficulty }) {
                 <h2 className="text-xl font-semibold text-blue-500 mb-3">Turn: {state.isXNext ? "❌" : "⭕"}</h2>
             )}
             <div className="grid grid-cols-3 place-items-center gap-2 sm:gap-4 w-[50%] sm:w-[300px]">
-                {state.board.map((square, i) => (
+                {state.board.map((square: string | null, i: number) => (
                     <Square key={i} value={square} onClick={() => !isBotMoving && dispatch({ type: "MOVE", index: i })} />
                 ))}
             </div>
@@ -97,7 +116,7 @@ export default function SingleGame({ difficulty }) {
                 dispatch({ type: "RESET" });
                 navigate("/");
             }}>Return to Main Page</button>
-            <History history={state.history} jumpTo={(step) => dispatch({ type: "JUMP_TO", step })} />
+            <History history={state.history} jumpTo={(step: number) => dispatch({ type: "JUMP_TO", step })} />
             <WinnerModal winner={winner} onReset={() => dispatch({ type: "RESET" })} />
         </div>
     );

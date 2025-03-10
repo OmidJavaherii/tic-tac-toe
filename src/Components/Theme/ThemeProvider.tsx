@@ -1,8 +1,18 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, ReactNode } from "react";
 
-export const ThemeContext = createContext();
+export const ThemeContext = createContext<{
+    theme: string;
+    toggleTheme: () => void;
+}>({
+    theme: 'light',
+    toggleTheme: () => {}
+});
 
-export default function ThemeProvider({ children }) {
+interface ThemeProviderProps {
+    children: ReactNode;
+}
+
+const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const initialTheme = localStorage.getItem("theme") || (systemPrefersDark ? "dark" : "light");
     const [theme, setTheme] = useState(initialTheme);
@@ -14,7 +24,7 @@ export default function ThemeProvider({ children }) {
     };
 
     useEffect(() => {
-        const handleSystemChange = (e) => {
+        const handleSystemChange = (e: MediaQueryListEvent) => {
             if (!localStorage.getItem("theme")) {
                 setTheme(e.matches ? "dark" : "light");
             }
@@ -31,4 +41,6 @@ export default function ThemeProvider({ children }) {
             <div className={theme === "dark" ? "dark-mode" : "light-mode"}>{children}</div>
         </ThemeContext.Provider>
     );
-}
+};
+
+export default ThemeProvider;

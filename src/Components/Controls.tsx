@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Dispatch } from "react";
 
-export default function Controls({ dispatch }) {
+type Action = { type: "UNDO" | "REDO" | "RESET" };
+
+export default function Controls({ dispatch }: { dispatch: Dispatch<Action> }) {
   return (
     <div className="flex space-x-2 mt-4">
       <button className="btn btn-nav transition duration-300 bg-red-500 hover:bg-red-600" onClick={() => dispatch({ type: "UNDO" })}>Undo</button>

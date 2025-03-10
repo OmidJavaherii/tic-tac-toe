@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function Square({ value, onClick }) {
+interface SquareProps {
+  value: string | null;
+  onClick: () => void;
+}
+
+export default function Square({ value, onClick }: SquareProps) {
   return (
     <button
       className="w-12 h-12 sm:w-24 sm:h-24 text-3xl font-bold flex items-center justify-center 

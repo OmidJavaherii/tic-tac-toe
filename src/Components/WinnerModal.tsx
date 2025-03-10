@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function WinnerModal({ winner, onReset }) {
+interface WinnerModalProps {
+  winner: string | null;
+  onReset: () => void;
+}
+
+export default function WinnerModal({ winner, onReset }: WinnerModalProps) {
   if (!winner) return null;
 
   return (

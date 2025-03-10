@@ -1,13 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../Theme/ThemeProvider";
+import { HomeProps } from './types';
+import { GameMode, Difficulty } from '../../types/common';
 
-export default function Home({ setGameMode, setDifficulty, deferredPrompt, isInstalled }) {
+const Home: React.FC<HomeProps> = ({ 
+    setGameMode, 
+    setDifficulty, 
+    deferredPrompt, 
+    isInstalled 
+}) => {
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false)
     const { theme, toggleTheme } = useContext(ThemeContext);
 
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isInStandaloneMode = window.matchMedia("(display-mode: standalone)").matches;
 
     const [installable, setInstallable] = useState(!!deferredPrompt);
@@ -37,9 +44,9 @@ export default function Home({ setGameMode, setDifficulty, deferredPrompt, isIns
         }
     };
 
-    const startGame = (mode, difficulty) => {
+    const startGame = (mode: GameMode, difficulty: Difficulty) => {
         setGameMode(mode);
-        setDifficulty(difficulty)
+        setDifficulty(difficulty);
         setTimeout(() => navigate("/game"), 100);
     };
 
@@ -80,3 +87,5 @@ export default function Home({ setGameMode, setDifficulty, deferredPrompt, isIns
         </div>
     );
 }
+
+export default Home;

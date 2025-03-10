@@ -8,6 +8,29 @@ import { saveToStorage, loadFromStorage } from "../../Utils/storage";
 import { getQueryParams, setQueryParams } from "../../Utils/queryParams";
 import { checkWinner, getMoveDetails } from "../../Utils/GameLogic";
 
+interface GameState {
+    board: (string | null)[];
+    isXNext: boolean;
+    history: { 
+        board: (string | null)[];
+        position?: string;
+        player?: string;
+    }[];
+    step: number;
+    redoStack: { 
+        board: (string | null)[];
+        position?: string;
+        player?: string;
+    }[];
+}
+
+type GameAction = 
+    | { type: "MOVE"; index: number }
+    | { type: "UNDO" }
+    | { type: "REDO" }
+    | { type: "RESET" }
+    | { type: "JUMP_TO"; step: number };
+
 const initialState = {
     board: Array(9).fill(null),
     isXNext: true,
@@ -16,7 +39,7 @@ const initialState = {
     redoStack: [],
 };
 
-function reducer(state, action) {
+function reducer(state: GameState, action: GameAction) {
     switch (action.type) {
         case "MOVE":
             if (state.board[action.index] || checkWinner(state.board)) return state;
@@ -136,7 +159,7 @@ export default function TwoPlayer() {
                 <h2 className="text-xl font-semibold text-blue-500 mb-3">Turn: {state.isXNext ? "❌" : "⭕"}</h2>
             )}
             <div className="grid grid-cols-3 place-items-center gap-2 sm:gap-4 w-[50%] sm:w-[300px]">
-                {state.board.map((square, i) => (
+                {state.board.map((square: string | null, i: number) => (
                     <Square key={i} value={square} onClick={() => dispatch({ type: "MOVE", index: i })} />
                 ))}
             </div>
@@ -146,7 +169,7 @@ export default function TwoPlayer() {
                 navigate("/");
             }}>
                 Return to Main Page</button>
-            <History history={state.history} jumpTo={(step) => dispatch({ type: "JUMP_TO", step })} />
+            <History history={state.history} jumpTo={(step: number) => dispatch({ type: "JUMP_TO", step })} />
             <WinnerModal winner={winner} onReset={() => dispatch({ type: "RESET" })} />
         </div>
     );
