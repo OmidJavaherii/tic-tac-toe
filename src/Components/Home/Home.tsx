@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../Theme/ThemeProvider";
-import { HomeProps } from './types';
-import { GameMode, Difficulty } from '../../types/common';
+import { HomeProps,GameMode, Difficulty } from '../../types/typesHome';
 
 const Home: React.FC<HomeProps> = ({ 
     setGameMode, 

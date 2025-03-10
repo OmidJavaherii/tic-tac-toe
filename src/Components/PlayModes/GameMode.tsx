@@ -4,11 +4,10 @@ import SingleGame from "./SingleGame";
 
 interface GameProps {
     gameMode: "twoPlayer" | "singlePlayer";
-    difficulty: "easy" | "hard";  // Removed "medium" since SingleGame only accepts easy/hard
+    difficulty: "easy" | "hard";
 }
 
 const Game: React.FC<GameProps> = ({ gameMode, difficulty }) => {
-    //   const [difficulty , setDifficulty] = useState("")
     
     return (
         <>

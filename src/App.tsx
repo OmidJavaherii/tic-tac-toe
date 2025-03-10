@@ -4,15 +4,9 @@ import "./styles.css";
 import Home from "./Components/Home/Home";
 import Game from "./Components/PlayModes/GameMode";
 import ThemeProvider from "./Components/Theme/ThemeProvider";
-
 // Define types for the BeforeInstallPromptEvent
-interface BeforeInstallPromptEvent extends Event {
-  prompt(): Promise<void>;
-  userChoice: Promise<{
-    outcome: "accepted" | "dismissed";
-    platform: string;
-  }>;
-}
+import { BeforeInstallPromptEvent } from "./types/pwa";
+
 
 export default function App(): JSX.Element {
   const [gameMode, setGameMode] = useState<"twoPlayer" | "singlePlayer">(
