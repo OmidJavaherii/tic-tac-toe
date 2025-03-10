@@ -1,9 +1,9 @@
 import { useState, useEffect, JSX } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./styles.css";
 import Home from "./Components/Home/Home";
 import Game from "./Components/PlayModes/GameMode";
 import ThemeProvider from "./Components/Theme/ThemeProvider";
-import "./styles.css";
 
 // Define types for the BeforeInstallPromptEvent
 interface BeforeInstallPromptEvent extends Event {
@@ -27,10 +27,12 @@ export default function App(): JSX.Element {
   useEffect(() => {
     const checkInstallation = (): void => {
       try {
-        const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+        const isStandalone = window.matchMedia(
+          "(display-mode: standalone)"
+        ).matches;
         setIsInstalled(isStandalone);
       } catch (error) {
-        console.error('Error checking installation status:', error);
+        console.error("Error checking installation status:", error);
         setIsInstalled(false);
       }
     };
@@ -63,7 +65,7 @@ export default function App(): JSX.Element {
         window.addEventListener("appinstalled", handleAppInstalled);
         checkInstallation();
       } catch (error) {
-        console.error('Initialization error:', error);
+        console.error("Initialization error:", error);
       }
     };
 
