@@ -4,7 +4,7 @@ import Square from "../Square";
 import History from "../History";
 import Controls from "../Controls";
 import WinnerModal from "../WinnerModal";
-import { saveToStorage, loadFromStorage } from "../../Utils/storage";
+import { saveToStorage, loadFromStorage, clearStorage } from "../../Utils/storage";
 import { getQueryParams, setQueryParams } from "../../Utils/queryParams";
 import { checkWinner, getMoveDetails } from "../../Utils/GameLogic";
 
@@ -165,6 +165,7 @@ export default function TwoPlayer() {
             </div>
             <Controls dispatch={dispatch} />
             <button className="btn mt-4" onClick={() => {
+                clearStorage();
                 dispatch({ type: "RESET" });
                 navigate("/");
             }}>

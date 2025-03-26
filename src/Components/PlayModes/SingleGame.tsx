@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Square from "../Square";
 import History from "../History";
 import WinnerModal from "../WinnerModal";
-import { saveToStorage, loadFromStorage } from "../../Utils/storage";
+import { saveToStorage, loadFromStorage, clearStorage } from "../../Utils/storage";
 import { getQueryParams, setQueryParams } from "../../Utils/queryParams";
 import { getMoveDetails, checkWinner, getBestMove, getBestMoveHard } from "../../Utils/GameLogic";
 
@@ -113,6 +113,7 @@ export default function SingleGame({ difficulty }: SingleGameProps) {
             </div>
             <button className="btn mt-4 bg-red-500 hover:bg-red-600" onClick={() => dispatch({ type: "RESET" })}>Reset</button>
             <button className="btn mt-4" onClick={() => {
+                clearStorage();
                 dispatch({ type: "RESET" });
                 navigate("/");
             }}>Return to Main Page</button>

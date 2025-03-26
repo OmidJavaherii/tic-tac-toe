@@ -22,3 +22,7 @@ export function loadFromStorage(): StorageGameState | null {
     const data = localStorage.getItem("tic-tac-toe");
     return data ? JSON.parse(data) : null;
 }
+
+export function clearStorage(): void {
+    localStorage.removeItem("tic-tac-toe");
+}
